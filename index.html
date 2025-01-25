@@ -5,8 +5,9 @@
     </head>
     <body>
         <script>
-            let workId = prompt('输入作品ID, 本工具只支持Nemo作品', '')
-            let token = prompt('输入你的 Token Authorization, 否则无法生成作品分享口令', '')
+            let params = new URL(location.href).searchParams
+            let workId = params.get('workId') ||  prompt('输入作品ID, 本工具只支持Nemo作品', '')
+            let token = params.get('token') || prompt('输入你的 Token Authorization, 否则无法生成作品分享口令', '')
             
             ;(async () => {
                 let workInfo = await fetch(`https://api.codemao.cn/creation-tools/v1/works/${ workId }/source/public`).then(re => re.json())

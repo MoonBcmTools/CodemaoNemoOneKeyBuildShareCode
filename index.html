@@ -33,9 +33,11 @@
                     credentials: 'include',
                 })
                 let json = await re.json()
-                if (re.ok)
-                    alert(`【喵口令】$&${ json.token }&$`)
-                else
+                if (re.ok) {
+                    let text = `【喵口令】$&${ json.token }&$`
+                    navigator.clipboard.writeText(text)
+                    alert('生成完毕, 已自动复制~ (' + text + ')')
+                } else
                     alert('错误: ' + JSON.stringify(json))
             })()
         </script>

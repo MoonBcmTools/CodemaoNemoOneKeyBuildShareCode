@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title>菠菜面Nemo作品口令一键生成</title>
+    </head>
+    <body>
+        <script>
+            let workId = prompt('输入作品ID, 本工具只支持Nemo作品', '')
+            let token = prompt('输入你的 Token Authorization, 否则无法生成作品分享口令', '')
+            
+            ;(async () => {
+                let workInfo = await fetch(`https://api.codemao.cn/creation-tools/v1/works/${ workId }/source/public`).then(re => re.json())
+                // 一般我们取最新的
+                let bcmUrl = workInfo.work_urls[0]
+                let re = await fetch('https://api.codemao.cn/nemo/v2/miao-codes/bcm', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        "app_version": "4.3.4",
+                        "bcm_version": "0.16.2",
+                        "equipment": "Redmi",
+                        "name": workInfo.name, // "作品名称",
+                        "os": "android",
+                        "preview": workInfo.preview, // "封面.cover",
+                        "work_id": workId, // "作品ID",
+                        "work_url": bcmUrl, // "作品源代码.bcm"
+                    }),
+                    headers: {
+                        "Content-Type": "application/json; charset=UTF-8",
+                        "User-Agent": "okhttp/4.2.2",
+                        "Authorization": `Bearer ${ token }`,
+                    },
+                    credentials: 'include',
+                })
+                let json = await re.json()
+                if (re.ok)
+                    alert(`【喵口令】$&${ json.token }&$`)
+                else
+                    alert('错误: ' + JSON.stringify(json))
+            })()
+        </script>
+    </body>
+</html>
